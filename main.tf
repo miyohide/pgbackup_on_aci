@@ -3,12 +3,19 @@ resource "azurerm_resource_group" "main" {
   location = var.location
 }
 
+resource "random_string" "name" {
+  length = 4
+  upper = false
+  lower = true
+  special = false
+}
+
 resource "azurerm_container_group" "main" {
   name                = "aci-${var.prefix}-name"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   ip_address_type     = "Public"
-  dns_name_label      = "aciname"
+  dns_name_label      = "aci${var.prefix}name${random_string.name.result}"
   os_type             = "Linux"
 
   container {
