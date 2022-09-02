@@ -1,10 +1,10 @@
 resource "azurerm_resource_group" "main" {
-  name     = "rg-pgbackup"
-  location = "japaneast"
+  name     = "rg-${var.prefix}-pgbackup"
+  location = var.location
 }
 
 resource "azurerm_container_group" "main" {
-  name                = "aciname"
+  name                = "aci-${var.prefix}-name"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   ip_address_type     = "Public"
