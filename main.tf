@@ -47,6 +47,7 @@ resource "azurerm_container_group" "main" {
   ip_address_type     = "None"
   # dns_name_label      = "aci${var.prefix}name${random_string.name.result}"
   os_type = "Linux"
+  restart_policy = "Never"
 
   container {
     name     = "postgres"
@@ -54,7 +55,7 @@ resource "azurerm_container_group" "main" {
     cpu      = "0.5"
     memory   = "1.0"
     commands = ["pg_dump"]
-    secure_environment_variables {
+    secure_environment_variables = {
       PGHOST         = azurerm_postgresql_flexible_server.pg.fqdn
       PGHOSTDATABASE = var.postgresql_database
       PGUSER         = var.postgresql_admin
