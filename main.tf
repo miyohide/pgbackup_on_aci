@@ -41,11 +41,11 @@ resource "azurerm_postgresql_flexible_server_database" "pg" {
 }
 
 resource "azurerm_postgresql_firewall_rule" "pg" {
-  name = "allowazure"
+  name                = "allowazure"
   resource_group_name = azurerm_resource_group.main.name
-  server_name = azurerm_postgresql_flexible_server.pg.name
-  start_ip_address = "0.0.0.0"
-  end_ip_address = "0.0.0.0"
+  server_name         = azurerm_postgresql_flexible_server.pg.name
+  start_ip_address    = "0.0.0.0"
+  end_ip_address      = "0.0.0.0"
 }
 
 resource "azurerm_container_group" "main" {
@@ -53,8 +53,8 @@ resource "azurerm_container_group" "main" {
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   ip_address_type     = "None"
-  os_type = "Linux"
-  restart_policy = "Never"
+  os_type             = "Linux"
+  restart_policy      = "Never"
 
   container {
     name     = "postgres"
@@ -63,10 +63,10 @@ resource "azurerm_container_group" "main" {
     memory   = "1.0"
     commands = ["pg_dump"]
     secure_environment_variables = {
-      PGHOST         = azurerm_postgresql_flexible_server.pg.fqdn
+      PGHOST     = azurerm_postgresql_flexible_server.pg.fqdn
       PGDATABASE = var.postgresql_database
-      PGUSER         = var.postgresql_admin
-      PGPASSWORD     = var.postgresql_password
+      PGUSER     = var.postgresql_admin
+      PGPASSWORD = var.postgresql_password
     }
 
     # volume {
