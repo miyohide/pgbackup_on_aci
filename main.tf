@@ -25,18 +25,18 @@ resource "random_string" "name" {
 # }
 
 resource "azurerm_postgresql_flexible_server" "pg" {
-  name = "pg-${var.prefix}-${random_string.name.result}"
-  resource_group_name = azurerm_resource_group.main.name
-  location = azurerm_resource_group.main.location
-  version = "13"
-  administrator_login = var.postgresql_admin
+  name                   = "pg-${var.prefix}-${random_string.name.result}"
+  resource_group_name    = azurerm_resource_group.main.name
+  location               = azurerm_resource_group.main.location
+  version                = "13"
+  administrator_login    = var.postgresql_admin
   administrator_password = var.postgresql_password
-  storage_mb = 32768
-  sku_name = "B_Standard_B1ms"
+  storage_mb             = 32768
+  sku_name               = "B_Standard_B1ms"
 }
 
 resource "azurerm_postgresql_flexible_server_database" "pg" {
-  name = var.postgresql_database
+  name      = var.postgresql_database
   server_id = azurerm_postgresql_flexible_server.pg.id
 }
 
@@ -46,19 +46,19 @@ resource "azurerm_container_group" "main" {
   resource_group_name = azurerm_resource_group.main.name
   ip_address_type     = "None"
   # dns_name_label      = "aci${var.prefix}name${random_string.name.result}"
-  os_type             = "Linux"
+  os_type = "Linux"
 
   container {
-    name   = "postgres"
-    image  = "postgres:13"
-    cpu    = "0.5"
-    memory = "1.0"
-    commands = [ "pg_dump" ]
+    name     = "postgres"
+    image    = "postgres:13"
+    cpu      = "0.5"
+    memory   = "1.0"
+    commands = ["pg_dump"]
     secure_environment_variables {
-      PGHOST = azurerm_postgresql_flexible_server.pg.fqdn
+      PGHOST         = azurerm_postgresql_flexible_server.pg.fqdn
       PGHOSTDATABASE = var.postgresql_database
-      PGUSER = var.postgresql_admin
-      PGPASSWORD = var.postgresql_password
+      PGUSER         = var.postgresql_admin
+      PGPASSWORD     = var.postgresql_password
     }
 
     # ports {
