@@ -19,3 +19,9 @@ variable "postgresql_password" {
   type        = string
   description = "PostgreSQLのAdmin Userのパスワード"
 }
+
+variable "postgresql_database" {
+  type        = string
+  default     = "testdb"
+  description = "PostgreSQLのデータベース名"
+}

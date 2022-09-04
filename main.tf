@@ -36,7 +36,7 @@ resource "azurerm_postgresql_flexible_server" "pg" {
 }
 
 resource "azurerm_postgresql_flexible_server_database" "pg" {
-  name = "testdb"
+  name = var.postgresql_database
   server_id = azurerm_postgresql_flexible_server.pg.id
 }
 
@@ -56,7 +56,7 @@ resource "azurerm_container_group" "main" {
     commands = [ "pg_dump" ]
     secure_environment_variables {
       PGHOST = azurerm_postgresql_flexible_server.pg.fqdn
-      PGHOSTDATABASE = "testdb"
+      PGHOSTDATABASE = var.postgresql_database
       PGUSER = var.postgresql_admin
       PGPASSWORD = var.postgresql_password
     }
