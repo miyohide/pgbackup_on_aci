@@ -40,6 +40,14 @@ resource "azurerm_postgresql_flexible_server_database" "pg" {
   server_id = azurerm_postgresql_flexible_server.pg.id
 }
 
+resource "azurerm_postgresql_firewall_rule" "pg" {
+  name = "allow azure"
+  resource_group_name = azurerm_resource_group.main.name
+  server_name = azurerm_postgresql_flexible_server.pg.name
+  start_ip_address = "0.0.0.0"
+  end_ip_address = "0.0.0.0"
+}
+
 resource "azurerm_container_group" "main" {
   name                = "aci-${var.prefix}-name"
   location            = azurerm_resource_group.main.location
