@@ -57,7 +57,7 @@ resource "azurerm_container_group" "main" {
     commands = ["pg_dump"]
     secure_environment_variables = {
       PGHOST         = azurerm_postgresql_flexible_server.pg.fqdn
-      PGHOSTDATABASE = var.postgresql_database
+      PGDATABASE = var.postgresql_database
       PGUSER         = var.postgresql_admin
       PGPASSWORD     = var.postgresql_password
     }
