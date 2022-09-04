@@ -59,7 +59,7 @@ resource "azurerm_postgresql_flexible_server" "pg" {
   name = "pg-${var.prefix}-${random_string.name.result}"
   resource_group_name = azurerm_resource_group.main.name
   location = azurerm_resource_group.main.location
-  version = "14"
+  version = "13"
   administrator_login = var.postgresql_admin
   administrator_password = var.postgresql_password
   zone = "1"
