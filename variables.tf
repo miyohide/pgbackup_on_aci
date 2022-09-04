@@ -9,3 +9,13 @@ variable "location" {
   default     = "japaneast"
   description = "リソースのリージョン"
 }
+
+variable "postgresql_admin" {
+  type        = string
+  description = "PostgreSQLのAdmin User"
+}
+
+variable "postgresql_password" {
+  type        = string
+  description = "PostgreSQLのAdmin Userのパスワード"
+}

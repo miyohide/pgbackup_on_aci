@@ -54,3 +54,15 @@ resource "azurerm_container_group" "main" {
     }
   }
 }
+
+resource "azurerm_postgresql_flexible_server" "pg" {
+  name = "pg-${var.prefix}-${random_string.name.result}"
+  resource_group_name = azurerm_resource_group.main.name
+  location = azurerm_resource_group.main.location
+  version = "14"
+  administrator_login = var.postgresql_admin
+  administrator_password = var.postgresql_password
+  zone = "1"
+  storage_mb = 32768
+  sku_name = "B_Standard_B1ms"
+}
