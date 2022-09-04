@@ -53,7 +53,6 @@ resource "azurerm_container_group" "main" {
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   ip_address_type     = "None"
-  # dns_name_label      = "aci${var.prefix}name${random_string.name.result}"
   os_type = "Linux"
   restart_policy = "Never"
 
@@ -69,11 +68,6 @@ resource "azurerm_container_group" "main" {
       PGUSER         = var.postgresql_admin
       PGPASSWORD     = var.postgresql_password
     }
-
-    # ports {
-    #   port     = 80
-    #   protocol = "TCP"
-    # }
 
     # volume {
     #   name       = "logs"
