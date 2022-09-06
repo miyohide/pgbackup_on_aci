@@ -10,44 +10,6 @@ resource "random_string" "name" {
   special = false
 }
 
-# resource "azurerm_storage_account" "main" {
-#   name                     = "st${var.prefix}${random_string.name.result}"
-#   resource_group_name      = azurerm_resource_group.main.name
-#   location                 = azurerm_resource_group.main.location
-#   account_tier             = "Standard"
-#   account_replication_type = "LRS"
-# }
-
-# resource "azurerm_storage_share" "main" {
-#   name                 = "aci-share"
-#   storage_account_name = azurerm_storage_account.main.name
-#   quota                = 5
-# }
-
-resource "azurerm_postgresql_flexible_server" "pg" {
-  name                   = "pg-${var.prefix}-${random_string.name.result}"
-  resource_group_name    = azurerm_resource_group.main.name
-  location               = azurerm_resource_group.main.location
-  version                = "13"
-  administrator_login    = var.postgresql_admin
-  administrator_password = var.postgresql_password
-  storage_mb             = 32768
-  sku_name               = "B_Standard_B1ms"
-}
-
-resource "azurerm_postgresql_flexible_server_database" "pg" {
-  name      = var.postgresql_database
-  server_id = azurerm_postgresql_flexible_server.pg.id
-}
-
-resource "azurerm_postgresql_firewall_rule" "pg" {
-  name                = "allowazure"
-  resource_group_name = azurerm_resource_group.main.name
-  server_name         = azurerm_postgresql_flexible_server.pg.name
-  start_ip_address    = "0.0.0.0"
-  end_ip_address      = "0.0.0.0"
-}
-
 resource "azurerm_container_group" "main" {
   name                = "aci-${var.prefix}-name"
   location            = azurerm_resource_group.main.location
@@ -63,7 +25,7 @@ resource "azurerm_container_group" "main" {
     memory   = "1.0"
     commands = ["pg_dump"]
     secure_environment_variables = {
-      PGHOST     = azurerm_postgresql_flexible_server.pg.fqdn
+      PGHOST     = azurerm_postgresql_flexible_server.main.fqdn
       PGDATABASE = var.postgresql_database
       PGUSER     = var.postgresql_admin
       PGPASSWORD = var.postgresql_password
