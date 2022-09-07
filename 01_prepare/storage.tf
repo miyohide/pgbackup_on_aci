@@ -8,7 +8,7 @@ resource "azurerm_storage_account" "main" {
 }
 
 resource "azurerm_storage_share" "main" {
-  name                 = "aci-share"
+  name                 = var.fileshare_name
   storage_account_name = azurerm_storage_account.main.name
   quota                = 5
 }

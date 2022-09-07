@@ -25,3 +25,9 @@ variable "postgresql_database" {
   default     = "testdb"
   description = "PostgreSQLのデータベース名"
 }
+
+variable "fileshare_name" {
+  type        = string
+  default     = "aci-share"
+  description = "Azure File Shareの名前"
+}
