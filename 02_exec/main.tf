@@ -1,19 +1,19 @@
-resource "azurerm_resource_group" "main" {
-  name     = "rg-${var.prefix}-pgbackup"
-  location = var.location
+data "azurerm_resource_group" "main" {
+  name = "rg-${var.prefix}-pgbackup"
 }
 
-resource "random_string" "name" {
-  length  = 4
-  upper   = false
-  lower   = true
-  special = false
+data "azurerm_postgresql_flexible_server" "main" {
+  name = var.postgresql_name
+}
+
+data "azurerm_storage_account" "main" {
+  name = var.storage_account_name
 }
 
 resource "azurerm_container_group" "main" {
   name                = "aci-${var.prefix}-name"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
+  location            = data.azurerm_resource_group.main.location
+  resource_group_name = data.azurerm_resource_group.main.name
   ip_address_type     = "None"
   os_type             = "Linux"
   restart_policy      = "Never"
@@ -25,20 +25,20 @@ resource "azurerm_container_group" "main" {
     memory   = "1.0"
     commands = ["pg_dump"]
     secure_environment_variables = {
-      PGHOST     = azurerm_postgresql_flexible_server.main.fqdn
+      PGHOST     = data.azurerm_postgresql_flexible_server.main.fqdn
       PGDATABASE = var.postgresql_database
-      PGUSER     = var.postgresql_admin
-      PGPASSWORD = var.postgresql_password
+      PGUSER     = data.azurerm_postgresql_flexible_server.main.administrator_login
+      PGPASSWORD = data.azurerm_postgresql_flexible_server.main.administrator_password
     }
 
-    # volume {
-    #   name       = "logs"
-    #   mount_path = "/aci/logs"
-    #   read_only  = false
-    #   share_name = azurerm_storage_share.main.name
+    volume {
+      name       = "backups"
+      mount_path = "/aci/backups"
+      read_only  = false
+      share_name = var.fileshare_name
 
-    #   storage_account_name = azurerm_storage_account.main.name
-    #   storage_account_key  = azurerm_storage_account.main.primary_access_key
-    # }
+      storage_account_name = data.azurerm_storage_account.main.name
+      storage_account_key  = data.azurerm_storage_account.main.primary_access_key
+    }
   }
 }

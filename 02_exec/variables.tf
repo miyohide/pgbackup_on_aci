@@ -4,24 +4,19 @@ variable "prefix" {
   description = "全てのリソースにつける接頭辞"
 }
 
-variable "location" {
-  type        = string
-  default     = "japaneast"
-  description = "リソースのリージョン"
-}
-
-variable "postgresql_admin" {
-  type        = string
-  description = "PostgreSQLのAdmin User"
-}
-
-variable "postgresql_password" {
-  type        = string
-  description = "PostgreSQLのAdmin Userのパスワード"
-}
-
 variable "postgresql_database" {
   type        = string
   default     = "testdb"
   description = "PostgreSQLのデータベース名"
+}
+
+variable "postgresql_name" {
+  type        = string
+  description = "PostgreSQLの名前"
+}
+
+variable "fileshare_name" {
+  type        = string
+  default     = "aci-share"
+  description = "Azure File Shareの名前"
 }
