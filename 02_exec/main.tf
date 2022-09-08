@@ -3,7 +3,8 @@ data "azurerm_resource_group" "main" {
 }
 
 data "azurerm_postgresql_flexible_server" "main" {
-  name = var.postgresql_name
+  name                = var.postgresql_name
+  resource_group_name = data.azurerm_resource_group.main.name
 }
 
 data "azurerm_storage_account" "main" {
@@ -28,7 +29,7 @@ resource "azurerm_container_group" "main" {
       PGHOST     = data.azurerm_postgresql_flexible_server.main.fqdn
       PGDATABASE = var.postgresql_database
       PGUSER     = data.azurerm_postgresql_flexible_server.main.administrator_login
-      PGPASSWORD = data.azurerm_postgresql_flexible_server.main.administrator_password
+      #      PGPASSWORD = data.azurerm_postgresql_flexible_server.main.administrator_password
     }
 
     volume {
