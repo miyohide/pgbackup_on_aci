@@ -1,3 +1,11 @@
+data "terraform_remote_state" "backend" {
+  backend = "local"
+
+  config = {
+    path = "./99_tfstate/terraform.tfstate"
+  }
+}
+
 data "azurerm_resource_group" "main" {
   name = "rg-${var.prefix}-pgbackup"
 }
@@ -30,7 +38,7 @@ resource "azurerm_container_group" "main" {
       PGHOST     = data.azurerm_postgresql_flexible_server.main.fqdn
       PGDATABASE = var.postgresql_database
       PGUSER     = data.azurerm_postgresql_flexible_server.main.administrator_login
-      #      PGPASSWORD = data.azurerm_postgresql_flexible_server.main.administrator_password
+      PGPASSWORD = data.terraform_remote_state.backend.outputs.postgres_password
     }
 
     volume {
