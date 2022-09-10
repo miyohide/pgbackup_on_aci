@@ -10,11 +10,6 @@ variable "postgresql_database" {
   description = "PostgreSQLのデータベース名"
 }
 
-variable "postgresql_name" {
-  type        = string
-  description = "PostgreSQLの名前"
-}
-
 variable "fileshare_name" {
   type        = string
   default     = "aci-share"
