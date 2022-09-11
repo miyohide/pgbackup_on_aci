@@ -2,21 +2,21 @@ data "terraform_remote_state" "backend" {
   backend = "local"
 
   config = {
-    path = "./99_tfstate/terraform.tfstate"
+    path = "../99_tfstate/terraform.tfstate"
   }
 }
 
 data "azurerm_resource_group" "main" {
-  name = "rg-${var.prefix}-pgbackup"
+  name = data.terraform_remote_state.backend.outputs.resource_group_name
 }
 
 data "azurerm_postgresql_flexible_server" "main" {
-  name                = var.postgresql_name
+  name                = data.terraform_remote_state.backend.outputs.postgres_server_name
   resource_group_name = data.azurerm_resource_group.main.name
 }
 
 data "azurerm_storage_account" "main" {
-  name                = var.storage_account_name
+  name                = data.terraform_remote_state.backend.outputs.storage_account_name
   resource_group_name = data.azurerm_resource_group.main.name
 }
 
@@ -33,7 +33,7 @@ resource "azurerm_container_group" "main" {
     image    = "postgres:13"
     cpu      = "0.5"
     memory   = "1.0"
-    commands = ["pg_dump"]
+    commands = ["pg_dump", "-f", "/aci/backups/pgdump.bin"]
     secure_environment_variables = {
       PGHOST     = data.azurerm_postgresql_flexible_server.main.fqdn
       PGDATABASE = var.postgresql_database
