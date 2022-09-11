@@ -18,7 +18,7 @@ resource "azurerm_postgresql_flexible_server_database" "main" {
 resource "azurerm_postgresql_firewall_rule" "main" {
   name                = "allowazure1"
   resource_group_name = azurerm_resource_group.main.name
-  server_name         = azurerm_postgresql_flexible_server.main.name
+  server_id           = azurerm_postgresql_flexible_server.main.id
   start_ip_address    = "0.0.0.0"
   end_ip_address      = "0.0.0.0"
 }
